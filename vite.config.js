@@ -4,6 +4,15 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+        }
+      }
+    }
+  },
   server: {
     proxy: {
       '/api': {
@@ -12,4 +21,6 @@ export default defineConfig({
       }
     }
   }
-})
+});
+
+// For more configuration options, see https://vitejs.dev/config/ 
