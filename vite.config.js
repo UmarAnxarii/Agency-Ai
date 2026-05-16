@@ -16,11 +16,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://agency-ai-virid-nine.vercel.app',
+        target: 'https://agency-ai-ruby-two.vercel.app', // ✅ Updated URL
         changeOrigin: true,
       }
     }
   }
 });
 
-// For more configuration options, see https://vitejs.dev/config/ 
+// For more configuration options, see https://vitejs.dev/config/

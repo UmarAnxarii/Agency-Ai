@@ -26,7 +26,7 @@ const Contact = () => {
 
     try {
       const response = await fetch(
-        "https://agency-ai-virid-nine.vercel.app/api/contact",
+        "https://agency-ai-ruby-two.vercel.app/api/contact", // ✅ Updated URL
         {
           method: "POST",
           headers: {
