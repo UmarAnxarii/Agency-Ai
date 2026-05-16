@@ -2,6 +2,7 @@ import Navbar from './Components/Navbar';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Footer from './Components/Footer';
+import { Analytics } from '@vercel/analytics/react';
 
 // Lazy load all pages
 const Home = lazy(() => import('./Pages/Home'));
@@ -36,6 +37,7 @@ function App() {
         </Routes>
       </Suspense>
       <Footer />
+      <Analytics />
     </div>
   );
 }
