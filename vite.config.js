@@ -7,8 +7,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
+        manualChunks(id) {  // ✅ Function instead of object
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
         }
       }
     }
@@ -16,11 +18,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://agency-ai-ruby-two.vercel.app', // ✅ Updated URL
+        target: 'https://agency-ai-ruby-two.vercel.app',
         changeOrigin: true,
       }
     }
   }
 });
-
-// For more configuration options, see https://vitejs.dev/config/
