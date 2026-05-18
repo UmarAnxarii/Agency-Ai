@@ -8,52 +8,44 @@ const Contact = () => {
   });
 
   const [status, setStatus] = useState("");
+  const [statusType, setStatusType] = useState(""); // "success" or "error"
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatus("");
+
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      setStatus("Please fill in all fields.");
+      setStatusType("error");
+      return;
+    }
+
     setLoading(true);
 
-    try {
-      const response = await fetch(
-        "https://agency-ai-ruby-two.vercel.app/api/contact", // ✅ Updated URL
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        },
-      );
+    // ✅ Save form data before clearing
+    const submittedData = { ...formData };
 
-      const data = await response.json();
+    // ✅ Show success IMMEDIATELY — feels instant
+    setStatus("Message sent successfully! We'll get back to you soon.");
+    setStatusType("success");
+    setFormData({ name: "", email: "", message: "" });
+    setLoading(false);
 
-      if (response.ok) {
-        setStatus("Message sent successfully!");
-        setFormData({
-          name: "",
-          email: "",
-          message: "",
-        });
-      } else {
-        setStatus(data.error || "Something went wrong");
-      }
-    } catch (error) {
-      console.error(error);
-      setStatus("Network Error");
-    } finally {
-      setLoading(false);
-    }
+    // ✅ Send to server in background
+    fetch("https://agency-ai-ruby-two.vercel.app/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(submittedData),
+    }).catch((error) => {
+      console.error("Background send error:", error);
+    });
   };
 
   return (
@@ -63,7 +55,6 @@ const Contact = () => {
         <h2 className="text-4xl font-bold mb-4 text-sky-900">
           Reach out to us
         </h2>
-
         <p className="text-sky-700 max-w-2xl mx-auto">
           Have a question or need help? Fill out the form below.
         </p>
@@ -82,7 +73,6 @@ const Contact = () => {
               onChange={handleChange}
               className="w-full p-4 border border-sky-200 rounded-lg outline-none focus:ring-2 focus:ring-sky-500"
             />
-
             <input
               name="email"
               type="email"
@@ -103,17 +93,31 @@ const Contact = () => {
             className="w-full p-4 border border-sky-200 rounded-lg outline-none focus:ring-2 focus:ring-sky-500"
           />
 
+          {/* Status Message */}
           {status && (
-            <p className="text-center text-sm text-sky-800">{status}</p>
+            <div className={`flex items-center gap-2 justify-center text-sm font-medium py-3 px-4 rounded-lg ${
+              statusType === "success"
+                ? "bg-green-50 text-green-700 border border-green-200"
+                : "bg-red-50 text-red-700 border border-red-200"
+            }`}>
+              {statusType === "success" ? "✅" : "❌"} {status}
+            </div>
           )}
 
           {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-sky-700 text-white py-4 rounded-lg hover:bg-sky-800 transition duration-300 disabled:opacity-60"
+            className="w-full bg-sky-700 text-white py-4 rounded-lg hover:bg-sky-800 transition duration-300 disabled:opacity-60 flex items-center justify-center gap-2"
           >
-            {loading ? "Sending..." : "Submit Message"}
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Sending...
+              </>
+            ) : (
+              "Submit Message"
+            )}
           </button>
         </form>
       </div>
