@@ -123,7 +123,7 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // 1. Connect to MongoDB (cached - fast after first request)
+    // 1. Connect to MongoDB (cached)
     await connectDB();
 
     // 2. Save to MongoDB
@@ -131,24 +131,20 @@ app.post("/api/contact", async (req, res) => {
     await newContact.save();
     console.log("✅ Saved contact");
 
-    // 3. Respond immediately ← user sees success instantly
+    // 3. Send email (properly awaited so Vercel doesn't kill it)
+    const transporter = await createTransporter();
+    await transporter.sendMail({
+      from:    `"Aitool Team" <${process.env.GMAIL_USER}>`,
+      to:      email,
+      subject: "👋 Thanks for reaching out to Aitool!",
+      html:    welcomeEmailHTML(name, message),
+    });
+    console.log(`📧 Welcome email sent to ${email}`);
+
+    // 4. Respond after everything is done
     res.status(201).json({
       success: true,
       message: "Message saved & welcome email sent!",
-    });
-
-    // 4. Send email in background (doesn't block response)
-    createTransporter().then(transporter => {
-      transporter.sendMail({
-        from:    `"Aitool Team" <${process.env.GMAIL_USER}>`,
-        to:      email,
-        subject: "👋 Thanks for reaching out to Aitool!",
-        html:    welcomeEmailHTML(name, message),
-      }).then(() => {
-        console.log(`📧 Welcome email sent to ${email}`);
-      }).catch(err => {
-        console.error("📧 Email error:", err.message);
-      });
     });
 
   } catch (error) {

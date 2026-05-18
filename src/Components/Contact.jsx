@@ -33,7 +33,7 @@ const Contact = () => {
     const submittedData = { ...formData };
 
     // ✅ Show success IMMEDIATELY — feels instant
-    setStatus("Message sent successfully! We'll get back to you soon.");
+    setStatus("Message sent successfully!.");
     setStatusType("success");
     setFormData({ name: "", email: "", message: "" });
     setLoading(false);
@@ -95,13 +95,13 @@ const Contact = () => {
 
           {/* Status Message */}
           {status && (
-            <div className={`flex items-center gap-2 justify-center text-sm font-medium py-3 px-4 rounded-lg ${
-              statusType === "success"
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}>
-              {statusType === "success" ? "✅" : "❌"} {status}
-            </div>
+            <p
+              className={`text-center text-sm font-medium ${
+                statusType === "success" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {status}
+            </p>
           )}
 
           {/* Button */}
