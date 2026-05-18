@@ -17,17 +17,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// ─── MongoDB Connection ───────────────────────────────────────────────────────
-mongoose
-  .connect(process.env.MONGO_URI, {
-    dbName: "Form_Data",
-  })
-  .then(() => {
-    console.log("MongoDB Connected Successfully");
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+// ─── MongoDB Connection (Cached for Serverless) ───────────────────────────────
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) return;
+  await mongoose.connect(process.env.MONGO_URI, { dbName: "Form_Data" });
+  isConnected = true;
+  console.log("MongoDB Connected Successfully");
+};
 
 // ─── Contact Schema ───────────────────────────────────────────────────────────
 const contactSchema = new mongoose.Schema({
@@ -125,25 +123,34 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // 1. Save to MongoDB
+    // 1. Connect to MongoDB (cached - fast after first request)
+    await connectDB();
+
+    // 2. Save to MongoDB
     const newContact = new Contact({ name, email, message });
-    const savedContact = await newContact.save();
-    console.log("✅ Saved contact:", savedContact);
+    await newContact.save();
+    console.log("✅ Saved contact");
 
-    // 2. Send welcome email via Gmail OAuth2
-    const transporter = await createTransporter();
-    await transporter.sendMail({
-      from:    `"Aitool Team" <${process.env.GMAIL_USER}>`,
-      to:      email,
-      subject: "👋 Thanks for reaching out to Aitool!",
-      html:    welcomeEmailHTML(name, message),
-    });
-    console.log(`📧 Welcome email sent to ${email}`);
-
+    // 3. Respond immediately ← user sees success instantly
     res.status(201).json({
       success: true,
       message: "Message saved & welcome email sent!",
     });
+
+    // 4. Send email in background (doesn't block response)
+    createTransporter().then(transporter => {
+      transporter.sendMail({
+        from:    `"Aitool Team" <${process.env.GMAIL_USER}>`,
+        to:      email,
+        subject: "👋 Thanks for reaching out to Aitool!",
+        html:    welcomeEmailHTML(name, message),
+      }).then(() => {
+        console.log(`📧 Welcome email sent to ${email}`);
+      }).catch(err => {
+        console.error("📧 Email error:", err.message);
+      });
+    });
+
   } catch (error) {
     console.error("❌ Error:", error.message);
     res.status(500).json({ error: "Server Error" });
