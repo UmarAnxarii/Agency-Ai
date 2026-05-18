@@ -4,7 +4,7 @@ import ads from "../assets/ads_icon.svg";
 import content from "../assets/content_icon.svg";
 const Services = () => {
   return (
-    <div className="py-20 px-6 bg-gradient-to-b from-white to-gray-100">
+    <div className="py-16 px-4 bg-gradient-to-b from-white to-gray-100 sm:px-6 sm:py-18 md:px-8 lg:px-10">
       {/* Heading */}{" "}
       <div className="text-center mb-14">
         {" "}

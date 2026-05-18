@@ -2,8 +2,8 @@ import { company_logos } from '../assets/assets'
 
 function Logo() {
   return (
-    <section className="bg-white py-12 dark:bg-gray-900">
-      <div className="container mx-auto px-4">
+    <section className="bg-white py-12 dark:bg-gray-900 sm:py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <p className="mb-10 text-center text-sm font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
           Trusted by leading company
         </p>

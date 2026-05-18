@@ -49,9 +49,9 @@ const Contact = () => {
   };
 
   return (
-    <div className="py-20 px-6 bg-gradient-to-b from-sky-200 via-sky-100 to-white">
+    <div className="py-16 px-4 bg-gradient-to-b from-sky-200 via-sky-100 to-white sm:px-6 sm:py-18 md:px-8 lg:px-10">
       {/* Heading */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-10">
         <h2 className="text-4xl font-bold mb-4 text-sky-900">
           Reach out to us
         </h2>
@@ -61,7 +61,7 @@ const Contact = () => {
       </div>
 
       {/* Form */}
-      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl p-10 ring-1 ring-sky-200">
+      <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl p-8 sm:p-10 ring-1 ring-sky-200">
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Name + Email */}
           <div className="grid md:grid-cols-2 gap-6">

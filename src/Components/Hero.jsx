@@ -3,7 +3,7 @@ import heroImg from '../assets/hero_img.png'
 
 function Hero() {
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8 dark:bg-gray-900 md:px-8">
+    <section className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-10 dark:bg-gray-900 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10">
       <img src={groupProfile} alt="Group Profile" className="mb-3 rounded-full object-cover" />
       <h1 className="mb-6 text-center text-3xl font-bold line-spacing-40 text-gray-600 dark:text-white md:text-5xl">
         Turning imagination into<br /> <span className="text-blue-900">reality</span> with AI tools

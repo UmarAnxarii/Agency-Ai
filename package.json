@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "@vercel/analytics": "^2.0.1",
+    "firebase": "^12.13.0",
     "googleapis": "^171.4.0",
     "mongodb": "^7.2.0",
     "nodemailer": "^8.0.7",
